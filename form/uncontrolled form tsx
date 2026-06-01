@@ -1,0 +1,45 @@
+import React, { useRef } from 'react';
+
+const FeedbackForm: React.FC = () => {
+  const nameRef = useRef<HTMLInputElement>(null);
+  const feedbackRef = useRef<HTMLTextAreaElement>(null);
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    const nameValue = nameRef.current?.value;
+    const feedbackValue = feedbackRef.current?.value;
+
+    console.log('Name:', nameValue);
+    console.log('Feedback:', feedbackValue);
+  };
+
+  return (
+    <div>
+      <h2>Feedback Form</h2>
+      <form onSubmit={handleSubmit}>
+        <div>
+          <label>Name:</label>
+          <input
+            type="text"
+            ref={nameRef}
+          />
+        </div>
+
+        <div>
+          <label>Feedback:</label>
+          <textarea
+            ref={feedbackRef}
+            rows={4}
+          />
+        </div>
+
+        <button type="submit">
+          Submit Feedback
+        </button>
+      </form>
+    </div>
+  );
+};
+
+export default FeedbackForm;

@@ -1,0 +1,99 @@
+import React, { useReducer, useState } from 'react';
+
+interface Student {
+  id: number;
+  name: string;
+  score: number;
+}
+
+interface State {
+  students: Student[];
+}
+
+type Action =
+  | { type: 'ADD_STUDENT'; payload: string }
+  | { type: 'INCREMENT_SCORE'; payload: number }
+  | { type: 'DECREMENT_SCORE'; payload: number }
+  | { type: 'RESET_SCORE'; payload: number };
+
+const initialState: State = { students: [] };
+
+function reducer(state: State, action: Action): State {
+  switch (action.type) {
+    case 'ADD_STUDENT':
+      return {
+        ...state,
+        students: [...state.students, { id: Date.now(), name: action.payload, score: 0 }]
+      };
+    case 'INCREMENT_SCORE':
+      return {
+        ...state,
+        students: state.students.map(s => s.id === action.payload ? { ...s, score: s.score + 1 } : s)
+      };
+    case 'DECREMENT_SCORE':
+      return {
+        ...state,
+        students: state.students.map(s => s.id === action.payload ? { ...s, score: s.score - 1 } : s)
+      };
+    case 'RESET_SCORE':
+      return {
+        ...state,
+        students: state.students.map(s => s.id === action.payload ? { ...s, score: 0 } : s)
+      };
+    default:
+      return state;
+  }
+}
+
+const App: React.FC = () => {
+  const [state, dispatch] = useReducer(reducer, initialState);
+  const [name, setName] = useState('');
+
+  const handleAdd = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!name.trim()) return;
+    dispatch({ type: 'ADD_STUDENT', payload: name });
+    setName('');
+  };
+
+  const getTopStudent = () => {
+    if (state.students.length === 0) return 'No students available';
+    const top = state.students.reduce((max, s) => (s.score > max.score ? s : max), state.students[0]);
+    return top.name;
+  };
+
+  return (
+    <div>
+      <h2>Student Score Board (useReducer)</h2>
+
+      <form onSubmit={handleAdd}>
+        <input
+          type="text"
+          placeholder="Student Name"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+        />
+        <button type="submit">Add Student</button>
+      </form>
+
+      <div>
+        {state.students.map(student => (
+          <div key={student.id}>
+            <span>{student.name}: <strong>{student.score}</strong></span>
+            <div>
+              <button onClick={() => dispatch({ type: 'INCREMENT_SCORE', payload: student.id })}>➕ Increase</button>
+              <button onClick={() => dispatch({ type: 'DECREMENT_SCORE', payload: student.id })}>➖ Decrease</button>
+              <button onClick={() => dispatch({ type: 'RESET_SCORE', payload: student.id })}>Reset</button>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <div>
+        <strong>Top Student:</strong> {getTopStudent()}
+      </div>
+    </div>
+  );
+};
+
+export default App;

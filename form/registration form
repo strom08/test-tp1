@@ -1,0 +1,86 @@
+import React from 'react';
+import { useForm } from 'react-hook-form';
+
+interface RegisterInput {
+  fullName: string;
+  email: string;
+  password: string;
+  age: number;
+}
+
+const RegistrationForm: React.FC = () => {
+  const { register, handleSubmit, formState: { errors } } = useForm<RegisterInput>({
+    defaultValues: {
+      fullName: 'Guest User',
+      age: 18,
+    }
+  });
+
+  const onSubmit = (data: RegisterInput) => {
+    console.log(data);
+  };
+
+  return (
+    <div>
+      <h2>User Registration Form</h2>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        
+        <div>
+          <label>Full Name:</label>
+          <input
+            type="text"
+            {...register('fullName', { 
+              required: 'Full Name is required', 
+              minLength: { value: 3, message: 'Minimum 3 characters required' } 
+            })}
+          />
+          {errors.fullName && <p>{errors.fullName.message}</p>}
+        </div>
+
+        <div>
+          <label>Email Address:</label>
+          <input
+            type="text"
+            {...register('email', { 
+              required: 'Email Address is required', 
+              pattern: { value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/, message: 'Invalid email format' } 
+            })}
+          />
+          {errors.email && <p>{errors.email.message}</p>}
+        </div>
+
+        <div>
+          <label>Password:</label>
+          <input
+            type="password"
+            {...register('password', { 
+              required: 'Password is required', 
+              minLength: { value: 6, message: 'Minimum 6 characters required' },
+              validate: (value) => /\d/.test(value) || 'Must include at least one numeric digit'
+            })}
+          />
+          {errors.password && <p>{errors.password.message}</p>}
+        </div>
+
+        <div>
+          <label>Age:</label>
+          <input
+            type="number"
+            {...register('age', { 
+              required: 'Age is required', 
+              min: { value: 18, message: 'Minimum value is 18' },
+              max: { value: 60, message: 'Maximum value is 60' }
+            })}
+          />
+          {errors.age && <p>{errors.age.message}</p>}
+        </div>
+
+        <button type="submit">
+          Submit
+        </button>
+      </form>
+    </div>
+  );
+};
+
+export default RegistrationForm;

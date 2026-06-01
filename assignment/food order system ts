@@ -1,0 +1,69 @@
+class Order {
+    public customerName: string;
+    private orderId: string;
+    private amount: number;
+    private isDelivered: boolean;
+
+    constructor(customerName: string, orderId: string, amount: number) {
+        this.customerName = customerName;
+        this.orderId = orderId;
+        this.amount = amount;
+        this.isDelivered = false;
+    }
+
+    getOrderId(): string {
+        return this.orderId;
+    }
+
+    getAmount(): number {
+        return this.amount;
+    }
+
+    getDeliveryStatus(): boolean {
+        return this.isDelivered;
+    }
+
+    addAmount(value: number): void;
+    addAmount(value: number, note: string): void;
+    addAmount(value: number, note?: string): void {
+        this.amount += value;
+        if (note) {
+            console.log(`Note for ${this.customerName}: ${note}`);
+        }
+    }
+
+    markAsDelivered(): void {
+        this.isDelivered = true;
+    }
+
+    applyDiscount(percent: number): void {
+        this.amount -= (this.amount * percent) / 100;
+    }
+
+    toString(): string {
+        return `Order[name=${this.customerName}, id=${this.orderId}, amount=${this.amount}, delivered=${this.isDelivered}]`;
+    }
+}
+
+const o1 = new Order("Riya", "101", 500);
+const o2 = new Order("Amit", "102", 750);
+const o3 = new Order("Vipin", "103", 350);
+
+o1.addAmount(50); 
+o2.addAmount(100, "Extra cheese added"); 
+
+o3.applyDiscount(10);
+
+o2.markAsDelivered();
+
+console.log("\n--- All Orders ---");
+console.log(o1.toString());
+console.log(o2.toString());
+console.log(o3.toString());
+
+const orders = [o1, o2, o3];
+const highestOrder = orders.reduce((max, o) => o.getAmount() > max.getAmount() ? o : max, orders[0]);
+console.log(`\nOrder with highest amount: ${highestOrder.customerName} ($${highestOrder.getAmount()})`);
+
+const deliveredCount = orders.filter(o => o.getDeliveryStatus()).length;
+console.log(`Total delivered orders: ${deliveredCount}`);

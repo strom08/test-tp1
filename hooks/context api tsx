@@ -1,0 +1,80 @@
+import React, { createContext, useState, useContext } from 'react';
+
+interface CounterContextType {
+  count: number;
+  step: number;
+  increment: () => void;
+  decrement: () => void;
+  reset: () => void;
+  updateStep: (value: number) => void;
+}
+
+const CounterContext = createContext<CounterContextType | undefined>(undefined);
+
+const Display: React.FC = () => {
+  const context = useContext(CounterContext);
+  if (!context) throw new Error('Display must be used within a CounterProvider');
+
+  return (
+    <div>
+      <h3>Display Component</h3>
+      <p>Current Count: <strong>{context.count}</strong></p>
+      <p>Current Step: <strong>{context.step}</strong></p>
+    </div>
+  );
+};
+
+const Controls: React.FC = () => {
+  const context = useContext(CounterContext);
+  if (!context) throw new Error('Controls must be used within a CounterProvider');
+
+  return (
+    <div>
+      <h3>Controls Component</h3>
+      
+      <div>
+        <button onClick={context.increment}>
+          Increment ➕
+        </button>
+        <button onClick={context.decrement}>
+          Decrement ➖
+        </button>
+      </div>
+
+      <div>
+        <button onClick={() => context.updateStep(1)}>
+          Step +1
+        </button>
+        <button onClick={() => context.updateStep(5)}>
+          Step +5
+        </button>
+      </div>
+
+      <button onClick={context.reset}>
+        Reset
+      </button>
+    </div>
+  );
+};
+
+const App: React.FC = () => {
+  const [count, setCount] = useState<number>(0);
+  const [step, setStep] = useState<number>(1);
+
+  const increment = () => setCount(prev => prev + step);
+  const decrement = () => setCount(prev => prev - step);
+  const reset = () => setCount(0);
+  const updateStep = (value: number) => setStep(value);
+
+  return (
+    <CounterContext.Provider value={{ count, step, increment, decrement, reset, updateStep }}>
+      <div>
+        <h2>Context API Counter Assignment</h2>
+        <Display />
+        <Controls />
+      </div>
+    </CounterContext.Provider>
+  );
+};
+
+export default App;

@@ -1,0 +1,69 @@
+// Controlled Form (useState) Real-time validation & UI updates
+import React, { useState } from 'react';
+
+const SignupForm: React.FC = () => {
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
+  const emailError = !email.includes('@') && email.length > 0;
+  const passwordError = password.length < 6 && password.length > 0;
+
+  const isFormValid = name.trim() !== '' && email.includes('@') && password.length >= 6;
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (isFormValid) {
+      alert('Form Submitted Successfully!');
+    }
+  };
+
+  return (
+    <div>
+      <h2>Signup Form</h2>
+      <form onSubmit={handleSubmit}>
+        <div>
+          <label>Name:</label>
+          <input
+            type="text"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />
+        </div>
+
+        <div>
+          <label>Email:</label>
+          <input
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+          {emailError && <p>Email must contain @</p>}
+        </div>
+
+        <div>
+          <label>Password:</label>
+          <input
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+          {passwordError && <p>Password must be at least 6 characters</p>}
+        </div>
+
+        <button type="submit" disabled={!isFormValid}>
+          Submit
+        </button>
+      </form>
+
+      <div>
+        <h3>Real-time Preview</h3>
+        <p><strong>Name:</strong> {name || '---'}</p>
+        <p><strong>Email:</strong> {email || '---'}</p>
+        <p><strong>Password:</strong> {password || '---'}</p>
+      </div>
+    </div>
+  );
+};
+
+export default SignupForm;

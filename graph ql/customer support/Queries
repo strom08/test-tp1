@@ -1,0 +1,70 @@
+# Task 2: Fetch all users
+query {
+  users {
+    id
+    name
+    email
+    city
+  }
+}
+
+# Task 3: Fetch single user by ID
+query {
+  user(id: 1) {
+    id
+    name
+    email
+  }
+}
+
+# Task 4: Fetch all support queries
+query {
+  queries {
+    id
+    title
+  }
+}
+
+# Task 5: Fetch users by city
+query {
+  usersByCity(city: "Delhi") {
+    name
+    email
+  }
+}
+
+# Task 6: Nested query (User with their queries)
+query {
+  user(id: 1) {
+    name
+    queries {
+      title
+    }
+  }
+}
+
+# Task 13: Total users count
+query {
+  totalUsers
+}
+
+# Task 14: Total support queries count
+query {
+  totalQueries
+}
+
+# Task 15: Search user by name
+query {
+  searchUser(name: "Amit") {
+    id
+    name
+  }
+}
+
+# Task 16: Users with query count
+query {
+  usersWithQueryCount {
+    name
+    totalQueries
+  }
+}

@@ -1,0 +1,19 @@
+query GetSingleStudent {
+  student(id: "1") {
+    id
+    name
+    age
+    course
+  }
+}
+
+Fetch All Students
+
+query GetAllStudents {
+  allStudents {
+    id
+    name
+    age
+    course
+  }
+}

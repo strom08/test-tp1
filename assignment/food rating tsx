@@ -1,0 +1,112 @@
+import React, { useState } from 'react';
+
+interface FoodItem {
+  id: number;
+  name: string;
+  rating: number;
+}
+
+const FoodRatingApp: React.FC = () => {
+  const [foods, setFoods] = useState<FoodItem[]>([
+    { id: 1, name: '🍕 Pizza', rating: 0 },
+    { id: 2, name: '🍔 Burger', rating: 0 },
+    { id: 3, name: '🌮 Taco', rating: 0 },
+    { id: 4, name: '🥗 Salad', rating: 0 },
+  ]);
+
+  const [filter, setFilter] = useState<'all' | 'high' | 'low' | 'unrated'>('all');
+
+  const handleRate = (id: number, rating: number) => {
+    setFoods(foods.map(item => item.id === id ? { ...item, rating } : item));
+  };
+
+  const handleReset = () => {
+    setFoods(foods.map(item => ({ ...item, rating: 0 })));
+  };
+
+  const filteredFoods = foods.filter(item => {
+    if (filter === 'high') return item.rating >= 4;
+    if (filter === 'low') return item.rating < 3;
+    if (filter === 'unrated') return item.rating === 0;
+    return true;
+  });
+
+  const allUnrated = foods.every(item => item.rating === 0);
+  
+  const totalRatings = foods.reduce((sum, item) => sum + item.rating, 0);
+  const averageRating = allUnrated ? 0 : totalRatings / foods.length;
+
+  const highestRating = Math.max(...foods.map(item => item.rating));
+  const lowestRating = Math.min(...foods.map(item => item.rating));
+
+  const highestRatedFoods = foods
+    .filter(item => item.rating === highestRating && item.rating > 0)
+    .map(item => item.name)
+    .join(', ');
+
+  const lowestRatedFoods = foods
+    .filter(item => item.rating === lowestRating)
+    .map(item => item.name)
+    .join(', ');
+
+  const highRatedCount = foods.filter(item => item.rating >= 4).length;
+
+  return (
+    <div>
+      <h2>Food Rating App</h2>
+
+      <div>
+        <button onClick={() => setFilter('all')}>
+          Show All
+        </button>
+        <button onClick={() => setFilter('high')}>
+          High Rated (4+ ⭐)
+        </button>
+        <button onClick={() => setFilter('low')}>
+          Low Rated (Below 3 ⭐)
+        </button>
+        <button onClick={() => setFilter('unrated')}>
+          Unrated (0 ⭐)
+        </button>
+      </div>
+
+      <div>
+        {filteredFoods.map(item => (
+          <div key={item.id}>
+            <span>{item.name} ({item.rating} ⭐)</span>
+            <div>
+              {[1, 2, 3, 4, 5].map(star => (
+                <button key={star} onClick={() => handleRate(item.id, star)}>
+                  {star}⭐
+                </button>
+              ))}
+            </div>
+          </div>
+        ))}
+        {filteredFoods.length === 0 && <p>No items match the selected filter.</p>}
+      </div>
+
+      <hr />
+
+      <div>
+        <h3>Statistics</h3>
+        {allUnrated ? (
+          <p>No ratings available</p>
+        ) : (
+          <div>
+            <p><strong>Average Rating:</strong> {averageRating.toFixed(2)}</p>
+            <p><strong>Highest Rated:</strong> {highestRatedFoods || 'None'}</p>
+            <p><strong>Lowest Rated:</strong> {lowestRatedFoods || 'None'}</p>
+            <p><strong>Foods Rated 4 stars or higher:</strong> {highRatedCount}</p>
+          </div>
+        )}
+      </div>
+
+      <button onClick={handleReset}>
+        Reset All Ratings
+      </button>
+    </div>
+  );
+};
+
+export default FoodRatingApp;

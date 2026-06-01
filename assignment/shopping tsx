@@ -1,0 +1,92 @@
+import React, { useState } from 'react';
+
+interface Product {
+  id: number;
+  name: string;
+  price: number;
+}
+
+interface ProductItemProps {
+  product: Product;
+  onDelete: (id: number) => void;
+  onAddToCart: (product: Product) => void;
+}
+
+const ProductItem: React.FC<ProductItemProps> = ({ product, onDelete, onAddToCart }) => {
+  const handleView = () => {
+    alert(`Product Name: ${product.name}`);
+  };
+
+  return (
+    <div>
+      <div>
+        <strong>{product.name}</strong> - ${product.price}
+      </div>
+      <div>
+        <button onClick={handleView}>
+          View
+        </button>
+        <button onClick={() => onAddToCart(product)}>
+          Add to Cart
+        </button>
+        <button onClick={() => onDelete(product.id)}>
+          Delete
+        </button>
+      </div>
+    </div>
+  );
+};
+
+const ShoppingApp: React.FC = () => {
+  const [products, setProducts] = useState<Product[]>([
+    { id: 1, name: 'Phone', price: 699 },
+    { id: 2, name: 'Laptop', price: 999 },
+    { id: 3, name: 'Headphones', price: 199 },
+  ]);
+
+  const [cart, setCart] = useState<Product[]>([]);
+
+  const handleDeleteProduct = (id: number) => {
+    setProducts(products.filter(product => product.id !== id));
+  };
+
+  const handleAddToCart = (product: Product) => {
+    setCart([...cart, product]);
+  };
+
+  return (
+    <div>
+      <h2>Product List</h2>
+      <div>
+        {products.map(product => (
+          <ProductItem
+            key={product.id}
+            product={product}
+            onDelete={handleDeleteProduct}
+            onAddToCart={handleAddToCart}
+          />
+        ))}
+        {products.length === 0 && <p>No products available.</p>}
+      </div>
+
+      <hr />
+
+      <h2>Cart Section</h2>
+      <div>
+        {cart.length === 0 ? (
+          <p>Your cart is empty.</p>
+        ) : (
+          <ul>
+            {cart.map((item, index) => (
+              <li key={index}>
+                {item.name} - ${item.price}
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+    </div>
+  );
+};
+
+export default ShoppingApp;

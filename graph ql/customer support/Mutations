@@ -1,0 +1,43 @@
+# Task 7: Add user
+mutation {
+  addUser(name: "Vikram Malhotra", email: "vikram@gmail.com", city: "Pune") {
+    id
+    name
+  }
+}
+
+# Task 8: Add support query
+mutation {
+  addSupportQuery(id: 3, title: "Payment failure issue") {
+    id
+    title
+  }
+}
+
+# Task 9: Update user city
+mutation {
+  updateUserCity(id: 1, city: "Kolkata") {
+    id
+    name
+    city
+  }
+}
+
+# Task 10: Update user email
+mutation {
+  updateUserEmail(id: 2, email: "priya_new@gmail.com") {
+    id
+    name
+    email
+  }
+}
+
+# Task 11: Delete user
+mutation {
+  deleteUser(id: 3)
+}
+
+# Task 12: Delete support query
+mutation {
+  deleteSupportQuery(id: 1, title: "Unable to update profile")
+}

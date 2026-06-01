@@ -1,0 +1,10 @@
+query {
+  getUser {
+    name
+    age
+    enrolledCourse {
+      courseName
+      duration
+    }
+  }
+}

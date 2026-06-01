@@ -1,0 +1,85 @@
+import React, { useState } from 'react';
+import { BrowserRouter, Routes, Route, NavLink, useNavigate } from 'react-router-dom';
+
+const Navbar: React.FC = () => {
+  return (
+    <nav>
+      <NavLink to="/">
+        Home
+      </NavLink>
+      <NavLink to="/about">
+        About
+      </NavLink>
+      <NavLink to="/contact">
+        Contact
+      </NavLink>
+    </nav>
+  );
+};
+
+const Home: React.FC = () => {
+  const navigate = useNavigate();
+
+  return (
+    <div>
+      <h2>Home Page</h2>
+      <button onClick={() => navigate('/contact')}>
+        Go to Contact
+      </button>
+    </div>
+  );
+};
+
+const About: React.FC = () => {
+  return (
+    <div>
+      <h2>About Page</h2>
+    </div>
+  );
+};
+
+const Contact: React.FC = () => {
+  const navigate = useNavigate();
+  const [name, setName] = useState<string>('');
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    alert('Form Submitted');
+    navigate('/');
+  };
+
+  return (
+    <div>
+      <h2>Contact Page</h2>
+      <form onSubmit={handleSubmit}>
+        <input 
+          type="text" 
+          placeholder="Name input" 
+          value={name} 
+          onChange={(e) => setName(e.target.value)} 
+          required 
+        />
+        <button type="submit">
+          Submit
+        </button>
+      </form>
+    </div>
+  );
+};
+
+const App: React.FC = () => {
+  return (
+    <BrowserRouter>
+      <div>
+        <Navbar />
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/contact" element={<Contact />} />
+        </Routes>
+      </div>
+    </BrowserRouter>
+  );
+};
+
+export default App;
